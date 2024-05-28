@@ -1,0 +1,15 @@
+# Copyright (c) 2024 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+description: Tone Behavior
+
+compatible: "chiptuner,behavior-tone"
+
+include: one_param.yaml
+
+properties:
+  pwms:
+    required: true
+    type: phandle-array
+    description: |
+      Reference to a PWM instance.

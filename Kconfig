@@ -1,0 +1,4 @@
+config CHIPTUNER_BEHAVIOR_TONE
+    bool "Chiptuner Tone Behavior"
+    default y
+    depends on DT_HAS_CHIPTUNER_BEHAVIOR_TONE_ENABLED && PWM
