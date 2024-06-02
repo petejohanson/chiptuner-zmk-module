@@ -36,6 +36,7 @@ static int set_inst_freq(const struct device *dev, uint32_t idx,
 
   int ret = pwm_set_dt(&cfg->pwms[idx], freq, freq / 2);
   if (ret < 0) {
+    LOG_WRN("pwm_set_dt rejected %d/%d with %d", freq, freq/2, ret);
     return ret;
   }
 
@@ -58,8 +59,10 @@ on_behavior_tone_binding_pressed(struct zmk_behavior_binding *binding,
       int ret = set_inst_freq(dev, i, binding->param1);
 
       if (ret < 0) {
-        LOG_WRN("Failued to set the tone at index %d", i);
+        LOG_WRN("Failed to set the tone at index %d", i);
       }
+
+      LOG_DBG("Set the tone at index %d to %d", i, binding->param1);
 
       return ZMK_BEHAVIOR_OPAQUE;
     } else if (oldest_idx == UINT32_MAX ||
@@ -72,7 +75,7 @@ on_behavior_tone_binding_pressed(struct zmk_behavior_binding *binding,
   int ret = set_inst_freq(dev, oldest_idx, binding->param1);
 
   if (ret < 0) {
-    LOG_WRN("Failued to set the tone at index %d", oldest_idx);
+    LOG_WRN("Failed to set the tone at index %d", oldest_idx);
   }
 
   return ZMK_BEHAVIOR_OPAQUE;
@@ -90,7 +93,7 @@ on_behavior_tone_binding_released(struct zmk_behavior_binding *binding,
       int ret = set_inst_freq(dev, i, 0);
 
       if (ret < 0) {
-        LOG_WRN("Failued to clear the tone at index %d", i);
+        LOG_WRN("Failed to clear the tone at index %d", i);
       }
 
       return ZMK_BEHAVIOR_OPAQUE;
