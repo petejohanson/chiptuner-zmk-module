@@ -34,7 +34,7 @@ static int set_inst_freq(const struct device *dev, uint32_t idx,
   const struct behavior_tone_config *cfg = dev->config;
   struct behavior_tone_data *data = dev->data;
 
-  int ret = pwm_set_dt(&cfg->pwms[idx], freq, freq / 2);
+  int ret = pwm_set_dt(&cfg->pwms[idx], PWM_HZ(freq), PWM_HZ(freq) / 2);
   if (ret < 0) {
     LOG_WRN("pwm_set_dt rejected %d/%d with %d", freq, freq/2, ret);
     return ret;
@@ -105,7 +105,16 @@ on_behavior_tone_binding_released(struct zmk_behavior_binding *binding,
   return ZMK_BEHAVIOR_OPAQUE;
 }
 
-static int behavior_tone_init(const struct device *dev) { return 0; }
+static int behavior_tone_init(const struct device *dev) {
+  const struct behavior_tone_config *cfg = dev->config;
+  for (int i = 0; i < cfg->pwms_len; i++) {
+	  if (!device_is_ready(cfg->pwms[i].dev)) {
+		  LOG_WRN("PWM NOT READY!");
+	}
+  }
+
+  return 0;
+}
 
 static const struct behavior_driver_api behavior_tone_driver_api = {
     .binding_pressed = on_behavior_tone_binding_pressed,
